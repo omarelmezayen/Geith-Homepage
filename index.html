@@ -3592,6 +3592,22 @@ html.f-lock, html.f-lock body { overflow: hidden; }
 @media (max-width: 600px) {
   .pc-price.sc-pr s { display: none; }
 }
+
+/* ======================= v60: the fit check's fields ======================= */
+/* the unit sits right beside the number (it stood apart at the field's end): the number keeps to three digits' width and
+   leans toward it, and the pair is centred between the − and + */
+.pd-in input { flex: 0 0 3.4ch; width: 3.4ch; margin-inline-start: auto; text-align: end; }
+.pd-in em { margin-inline: 6px auto; }
+/* the front view under the plan: a hairline with its name between them, each piece's height above it */
+#fitSvg .kdv { stroke: var(--line2); stroke-width: .8; }
+#fitSvg .kvt { font-weight: 600; fill: var(--esp); letter-spacing: .02em; }
+#fitSvg .kht { font-size: calc(11.5px * var(--k)); font-weight: 600; fill: var(--esp); }
+/* four measures (v61): the width and the depth, then the ceiling and the door (or, in its place, the note that it comes in parts) */
+@media (max-width: 600px) {
+  .pd-fit-f.solo { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+/* the door's opening is cut out of the front wall in the figure's own paper */
+#fitSvg .kcut { fill: var(--paper); stroke: none; }
 </style>
 </head>
 <body>
@@ -6556,26 +6572,29 @@ var T = function (s) { return s; };
     var fitParts = function (id) { return id === '*' ? setUnits().every(inRoom) : inRoom(id); };
     function fitLead(id, set) {
       var door = fitParts(id) ? '' : L('، وعرض أضيق باب في طريقها إليه', ', and the narrowest door on its way there');
-      if (id === '*') return L('نرسم لك المجموعة كاملة في مكانك كما اخترتها، أو قطعة منها وحدها؛ قِس عرض المكان من الحائط إلى الحائط' + door + '.', 'We draw the whole set in your room as you chose it, or one piece alone; measure the place from wall to wall' + door + '.');
-      return set ? L('اختر قطعة من المجموعة، وقِس عرض مكانها من الحائط إلى الحائط' + door + '، ونرسمها لك فيه بمقاسها الحقيقي.', 'Choose a piece of the set, measure its place from wall to wall' + door + ', and we draw it there at its real size.')
-        : L('قِس عرض المكان من الحائط إلى الحائط' + door + '، ونرسمها لك فيه بمقاسها الحقيقي.', 'Measure the place from wall to wall' + door + ', and we draw the piece in it at its real size.');
+      if (id === '*') return L('نرسم لك المجموعة كاملة في مكانك كما اخترتها، أو قطعة منها وحدها؛ قِس عرض المكان وعمقه' + door + '.', 'We draw the whole set in your room as you chose it, or one piece alone; measure the place’s width and depth' + door + '.');
+      return set ? L('اختر قطعة من المجموعة، وقِس عرض مكانها وعمقه' + door + '، ونرسمها لك فيه بمقاسها الحقيقي.', 'Choose a piece of the set, measure its place’s width and depth' + door + ', and we draw it there at its real size.')
+        : L('قِس عرض المكان وعمقه' + door + '، ونرسمها لك فيه بمقاسها الحقيقي.', 'Measure the place’s width and depth' + door + ', and we draw the piece in it at its real size.');
     }
     function fitFields(id, wv, dv) {
-      var cm = L('سم', 'cm');
+      var cm = L('سم', 'cm'), h0 = $('#fitH'), hv = h0 ? h0.value : '', p0 = $('#fitDp'), pv = p0 ? p0.value : '';
       var field = function (fid, label, hint, val, min, max) {
         return '<div class="pd-ms"><label for="' + fid + '"><b>' + label + '</b><small>' + hint + '</small></label><div class="pd-in">' +
           '<button type="button" class="pd-st" data-st="-5" data-for="' + fid + '" aria-label="' + L('أقل ٥ سم', '5 cm less') + '">' + ICON('minus') + '</button>' +
           '<input type="number" id="' + fid + '" inputmode="numeric" min="' + min + '" max="' + max + '" value="' + val + '"><em>' + cm + '</em>' +
           '<button type="button" class="pd-st" data-st="5" data-for="' + fid + '" aria-label="' + L('أكثر ٥ سم', '5 cm more') + '">' + ICON('plus') + '</button></div></div>';
       };
-      var door = fitParts(id) ? '<div class="pd-ms pd-ms-note"><span class="pd-ms-ic" aria-hidden="true">' + ICON('truck') + '</span><span><b>' + L('تصل مفكّكة', 'Arrives in parts') + '</b><small>' + L('ويركّبها فريقنا في الغرفة، فتمر من أي باب.', 'and our team assembles it in the room, so any door will do.') + '</small></span></div>'
+      var door = fitParts(id) ? '<div class="pd-ms pd-ms-note"><span class="pd-ms-ic" aria-hidden="true">' + ICON('truck') + '</span><span><b>' + L('تصل مفكّكة', 'Arrives in parts') + '</b><small>' + L('فتمر من أي باب.', 'so any door will do.') + '</small></span></div>'
         : field('fitD', L('أضيق باب', 'Narrowest door'), L('في طريقها إلى المكان', 'on its way in'), dv || 90, 40, 300);
       var w0 = id === '*' ? Math.ceil((sceneSet(setUnits(), 0).need + 40) / 10) * 10 : dims(id).d[0] + 60;
-      return field('fitW', L('عرض المكان', 'Width of the place'), L('من الحائط إلى الحائط', 'from wall to wall'), wv || w0, 40, 900) + door;
+      var p0d = Math.ceil(((id === '*' ? sceneSet(setUnits(), 0) : sceneOne(id, 900)).depth + 30) / 10) * 10;
+      return field('fitW', L('عرض المكان', 'Width of the place'), L('من الحائط إلى الحائط', 'from wall to wall'), wv || w0, 40, 900) +
+        field('fitDp', L('عمق المكان', 'Depth of the place'), L('من خلفها إلى ما يقابلها', 'from behind it to what faces it'), pv || p0d, 60, 1200) +
+        field('fitH', L('ارتفاع السقف', 'Ceiling height'), L('من الأرض إلى السقف', 'from floor to ceiling'), hv || 280, 200, 500) + door;
     }
     function fitCap(id) {
-      if (id === '*') return '<span>' + L('رسم علوي بالمقياس', 'Plan, to scale') + '</span><span><b>' + fitSetName + '</b> · ' + L('المجموعة كاملة', 'the whole set') + ' · ' + nPieces(setUnits().length) + '</span>';
-      var d = dims(id).d; return '<span>' + L('رسم علوي بالمقياس', 'Plan, to scale') + '</span><span><b>' + PRODUCTS[id].n + '</b> · ' + d.join(' × ') + ' ' + L('سم', 'cm') + '</span>'; }
+      if (id === '*') return '<span>' + L('بالمقياس: من أعلى ومن الأمام', 'To scale: from above and from the front') + '</span><span><b>' + fitSetName + '</b> · ' + L('المجموعة كاملة', 'the whole set') + ' · ' + nPieces(setUnits().length) + '</span>';
+      var d = dims(id).d; return '<span>' + L('بالمقياس: من أعلى ومن الأمام', 'To scale: from above and from the front') + '</span><span><b>' + PRODUCTS[id].n + '</b> · ' + d.join(' × ') + ' ' + L('سم', 'cm') + '</span>'; }
     function fitPcThumb(x) { var im = imgOf(x); return '<span class="pl-dd-im">' + (im ? '<img src="' + srcOf(im) + '" alt="">' : '<i class="px-ph" aria-hidden="true"></i>') + '</span>'; }
     function fitAllThumb() { var ps = (fitPieces || []).slice(0, 4); return '<span class="pl-dd-im fpc-mos n' + ps.length + '">' + ps.map(function (x) { var im = imgOf(x); return im ? '<img src="' + srcOf(im) + '" alt="">' : '<i></i>'; }).join('') + '</span>'; }
     function fitAllT() { return '<span class="pl-dd-t"><b>' + L('المجموعة كاملة', 'The whole set') + '</b><small>' + L('كما اخترتها · ', 'as you chose it · ') + nPieces(setUnits().length) + '</small></span>'; }
@@ -6595,19 +6614,19 @@ var T = function (s) { return s; };
           '<div class="pd-fv" id="fitR" aria-live="polite"></div>' +
           '<div class="pd-fit-a"><button type="button" class="lnk" data-pdwa>' + L('أو أرسل لنا صورة مساحتك', 'or send us a photo of your space') + ' ' + LNK_IC + '</button></div></div>' +
         '<figure class="pd-fit-plan rv-up" style="--i:1"><figcaption id="fitCap">' + fitCap(id) + '</figcaption>' +
-          '<svg id="fitSvg" viewBox="0 0 640 400" fill="none" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="' + L('رسم علوي للقطعة في مساحتك', 'A plan of the piece in your space') + '"></svg></figure>' +
+          '<svg id="fitSvg" viewBox="0 0 640 400" fill="none" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="' + L('رسم للقطعة في مساحتك من أعلى ومن الأمام', 'The piece in your space, from above and from the front') + '"></svg></figure>' +
         '</div></section>';
     }
     // the measures: steppers of 5 cm, a typed value kept within its bounds, the drawing redrawn when the screen changes;
     // cur() is the piece being drawn (a set's page changes it)
     function bindFit(cur) {
-      on(pg, 'input', function (e) { if (e.target.id === 'fitW' || e.target.id === 'fitD') paintFit(cur()); });
+      on(pg, 'input', function (e) { if (/^fit(W|D|H|Dp)$/.test(e.target.id)) paintFit(cur()); });
       on(pg, 'click', function (e) {
         var b = e.target.closest('.pd-st'); if (!b) return;
         var inp = $('#' + b.dataset.for); if (!inp) return;
         inp.value = Math.max(+inp.min, Math.min(+inp.max, Math.round((+inp.value || 0) / 5) * 5 + +b.dataset.st)); paintFit(cur());
       });
-      on(pg, 'change', function (e) { var x = e.target; if (x.id === 'fitW' || x.id === 'fitD') { x.value = Math.max(+x.min, Math.min(+x.max, Math.round(+x.value || 0))); paintFit(cur()); } });
+      on(pg, 'change', function (e) { var x = e.target; if (/^fit(W|D|H|Dp)$/.test(x.id)) { x.value = Math.max(+x.min, Math.min(+x.max, Math.round(+x.value || 0))); paintFit(cur()); } });
       var fitT = null; on(window, 'resize', function () { clearTimeout(fitT); fitT = setTimeout(function () { paintFit(cur()); }, 150); });
       paintFit(cur());
     }
@@ -6691,6 +6710,83 @@ var T = function (s) { return s; };
       }
       return out;
     }
+    // ---------- the front view (v60): each piece as it stands, seen from the front, in its own box (its top at y = 0, the
+    // floor at y = h·s); a piece along a side wall is seen from its side, its back to that wall ----------
+    function elev(t, w, h, s) {
+      var fam = FAM[t], f = KF, P = KP, R = KR, c = function (n) { return n * s; };
+      var pw = w * s, ph = h * s, Z = function (z) { return ph - z * s; }, out = '';
+      var LT = '#efe6d8', PL = '#f8f1e7', WD = '#d9c39c', WD2 = '#c4a27e';
+      var legs = function (z, inset, lw) { return P('ko', R(inset, Z(z), lw, z * s, c(.6)), WD2) + P('ko', R(pw - inset - lw, Z(z), lw, z * s, c(.6)), WD2); };
+      if (fam === 'bed') {
+        // the headboard behind, the pillows above the mattress, the frame on short feet, the mattress under its cover
+        var base = 36, mt = 58, np = w >= 150 ? 2 : 1, pg2 = c(10), pww = (pw - c(16) - pg2 * (np - 1)) / np;
+        out += P('ko', R(0, 0, pw, Z(base - 4), c(10)), WD2);
+        for (var i = 0; i < np; i++) out += P('kt', R(c(8) + i * (pww + pg2), Z(mt + 20), pww, c(24), c(7)), '#fbf7f1');
+        out += P('ko', R(0, Z(base), pw, c(base - 6), c(2)), WD) + legs(6, c(6), c(5));
+        out += P('ko', R(c(3), Z(mt), pw - c(6), c(mt - base + 2), c(4)), LT) + P('kt', 'M' + f(c(6)) + ' ' + f(Z(mt - 6)) + 'H' + f(pw - c(6)));
+      } else if (t === 'wardrobes') {
+        var nd = doorsOf(w), dw = pw / nd, dl = '';
+        out += P('ko', R(0, 0, pw, ph, c(1)), LT);
+        dl += 'M0 ' + f(Z(8)) + 'H' + f(pw) + 'M0 ' + f(c(5)) + 'H' + f(pw);
+        for (var di = 1; di < nd; di++) dl += 'M' + f(di * dw) + ' ' + f(c(5)) + 'V' + f(Z(8));
+        for (var dj = 0; dj < nd; dj++) { var hx = dj % 2 ? dj * dw + c(4) : (dj + 1) * dw - c(4); dl += 'M' + f(hx) + ' ' + f(Z(h * .5 + 12)) + 'V' + f(Z(h * .5 - 12)); }
+        out += P('kt', dl);
+      } else if (t === 'nightstands' || t === 'dressers') {
+        var lg = t === 'dressers' ? 10 : 8, rows = t === 'dressers' ? 3 : 2, bh = c(h - lg), rl = '';
+        out += legs(lg, c(4), c(3)) + P('ko', R(0, 0, pw, bh, c(1.5)), WD);
+        for (var ri = 1; ri < rows; ri++) rl += 'M' + f(c(3)) + ' ' + f(bh * ri / rows) + 'H' + f(pw - c(3));
+        for (var rj = 0; rj < rows; rj++) { var ky = bh * (rj + .5) / rows; rl += 'M' + f(pw / 2 - c(6)) + ' ' + f(ky) + 'H' + f(pw / 2 + c(6)); }
+        out += P('kt', rl);
+        // a nightstand's lamp, faint (it is not part of the piece's height)
+        if (t === 'nightstands') out += P('kg', 'M' + f(pw / 2) + ' 0V' + f(-c(20)) + 'M' + f(pw / 2 - c(12)) + ' ' + f(-c(20)) + 'L' + f(pw / 2 - c(8)) + ' ' + f(-c(38)) + 'H' + f(pw / 2 + c(8)) + 'L' + f(pw / 2 + c(12)) + ' ' + f(-c(20)) + 'Z');
+      } else if (t === 'mirrors') {
+        var mr = c(Math.min(w / 2, 35));
+        out += P('ko', R(0, 0, pw, ph, mr), '#e7e3dc') + P('kt', R(c(5), c(5), pw - c(10), ph - c(10), Math.max(0, mr - c(5))));
+        out += P('kt', 'M' + f(pw * .3) + ' ' + f(ph * .32) + 'L' + f(pw * .58) + ' ' + f(ph * .2));
+      } else if (t === 'desks') {
+        out += legs(h - 4, 0, c(4)) + P('ko', R(0, 0, pw, c(4), c(1)), WD) + P('ko', R(pw - c(44), c(4), c(40), c(16), c(1)), WD) + P('kt', 'M' + f(pw - c(30)) + ' ' + f(c(12)) + 'H' + f(pw - c(18)));
+      } else if (t === 'benches') {
+        var nb = Math.max(2, Math.round(w / 24)), tb = '';
+        out += legs(10, c(5), c(4)) + P('ko', R(0, 0, pw, c(h - 10), c(4)), LT);
+        for (var bi = 0; bi < nb; bi++) { var bx = pw * (bi + .5) / nb; tb += 'M' + f(bx - .1) + ' ' + f(c(h - 10) * .45) + 'a' + f(Math.max(1.2, c(.9))) + ' ' + f(Math.max(1.2, c(.9))) + ' 0 1 0 .2 0Z'; }
+        out += P('kt kdot', tb);
+      } else if (t === 'dining-chairs') {
+        out += legs(44, c(3), c(3)) + P('ko', R(c(2), Z(48), pw - c(4), c(5), c(1.5)), LT) + P('ko', R(c(5), 0, pw - c(10), c(h - 50), c(6)), WD);
+      } else if (fam === 'seat') {
+        // a sofa or an armchair: the back with its cushions, the seat, the arms either side, the feet
+        var arm = Math.min(w * .12, 17) * s, seat = 44, armH = Math.min(h - 8, 64), nc = t === 'sofas' ? (w >= 190 ? 3 : 2) : 1, cw = (pw - 2 * arm) / nc, cl = '';
+        out += legs(10, c(8), c(4)) + P('ko', R(arm - c(2), 0, pw - 2 * arm + c(4), Z(seat) + c(2), c(9)), LT);
+        for (var ci = 0; ci < nc; ci++) out += P('kt', R(arm + ci * cw + c(2), c(5), cw - c(4), Z(seat) - c(6), c(7)), PL);
+        out += P('ko', R(arm - c(1), Z(seat), pw - 2 * arm + c(2), c(seat - 10), c(3)), LT);
+        for (var cj = 1; cj < nc; cj++) cl += 'M' + f(arm + cj * cw) + ' ' + f(Z(seat)) + 'V' + f(Z(10));
+        if (cl) out += P('kt', cl);
+        out += P('ko', R(0, Z(armH), arm, c(armH - 10), c(6)), LT) + P('ko', R(pw - arm, Z(armH), arm, c(armH - 10), c(6)), LT);
+      } else if (t === 'dining-sets') {
+        // the chairs' backs behind the table, then the table on its legs
+        var nch = Math.max(2, Math.floor(w / 62)), chw = c(46);
+        for (var ch = 0; ch < nch; ch++) out += P('kt', R(pw * (ch + .5) / nch - chw / 2 + c(4), Z(98), chw - c(8), c(52), c(6)), LT);
+        out += legs(h - 4, c(10), c(6)) + P('ko', R(0, 0, pw, c(4), c(1)), WD2);
+      } else {
+        // a low table: its top on a round base
+        out += P('ko', R(pw * .25, c(5), pw * .5, ph - c(5), c(3)), WD) + P('ko', R(0, 0, pw, c(5), c(2)), WD2);
+      }
+      return out;
+    }
+    function elevSide(t, d, h, s, backLeft) {
+      var fam = FAM[t], P = KP, R = KR, c = function (n) { return n * s; }, pw = d * s, ph = h * s, Z = function (z) { return ph - z * s; }, out = '';
+      var LT = '#efe6d8', WD = '#d9c39c', WD2 = '#c4a27e';
+      if (fam === 'seat' && t !== 'benches') {
+        var bw = c(Math.min(t === 'dining-chairs' ? 6 : 22, d * .25)), seat = t === 'dining-chairs' ? 48 : 44;
+        out += P('ko', R(c(3), Z(8), c(4), c(8)), WD2) + P('ko', R(pw - c(7), Z(8), c(4), c(8)), WD2);
+        out += P('ko', R(backLeft ? 0 : pw - bw, 0, bw, Z(seat - 4), c(4)), t === 'dining-chairs' ? WD : LT) + P('ko', R(0, Z(seat), pw, c(seat - 8), c(3)), LT);
+      } else if (t === 'desks') {
+        out += P('ko', R(c(2), c(4), c(4), ph - c(4)), WD2) + P('ko', R(pw - c(6), c(4), c(4), ph - c(4)), WD2) + P('ko', R(0, 0, pw, c(4), c(1)), WD);
+      } else {
+        out += P('ko', R(0, 0, pw, ph, c(1.5)), t === 'wardrobes' || t === 'mirrors' || fam === 'seat' ? LT : WD);
+        if (t === 'wardrobes') out += P('kt', 'M0 ' + KF(Z(8)) + 'H' + KF(pw));
+      }
+      return out;
+    }
     // a placed piece: its footprint (cm, x from the room's middle, y from the back wall) and its turn (0, 90 = back to the
     // right wall, -90 = back to the left wall)
     function place(id, x, y, rot) { var d = dims(id).d, side = rot === 90 || rot === -90; return { id: id, t: TYPE[id], w: d[0], d: d[1], x: x, y: y, rot: rot || 0, fw: side ? d[1] : d[0], fd: side ? d[0] : d[1] }; }
@@ -6763,7 +6859,7 @@ var T = function (s) { return s; };
     function paintFit(id) {
       var svg = $('#fitSvg'); if (!svg) return;
       var cm = L('\u00a0سم', '\u00a0cm'), num = function (el, a, b) { var v = Math.round(+(el && el.value) || 0); return Math.max(a, Math.min(b, v)); };
-      var W = num($('#fitW'), 40, 900), dr = $('#fitD'), door = dr ? num(dr, 40, 300) : 0;
+      var W = num($('#fitW'), 40, 900), dr = $('#fitD'), door = dr ? num(dr, 40, 300) : 0, Hc = num($('#fitH'), 200, 500), Dr = num($('#fitDp'), 60, 1200);
       var ff = $('#fitF'); if (ff) ff.classList.toggle('solo', !dr);
       var units = id === '*' ? setUnits() : [id], sc = id === '*' ? sceneSet(units, W) : sceneOne(id, W);
       // words and lines keep their size on a phone: k is how many drawing units one screen pixel holds
@@ -6771,10 +6867,12 @@ var T = function (s) { return s; };
       svg.style.setProperty('--k', k.toFixed(3));
       var f = KF, P = KP, R = KR, T = KT, tw = function (str) { return String(str).length * fs * .56; };
       var need = sc.need, over = need > W, gap = W - need;
-      var maxI = k > 1.4 ? 450 : 500, s = Math.min(maxI / Math.max(W, need + 8), (k > 1.4 ? 560 : 330) / sc.depth, 3.2);
+      var maxI = k > 1.4 ? 420 : 470, s = Math.min(maxI / Math.max(W, need + 8), (k > 1.4 ? 1000 : 640) / (Math.max(Dr, sc.ybot) + Hc + 130), 3.2);
       var cx = 320, xL = cx - W * s / 2, xR = cx + W * s / 2, TH = 9, c = function (n) { return n * s; };
       var yDim = fs + 10, yW = yDim + 16, yI = yW + TH, X = function (n) { return cx + n * s; }, Y = function (n) { return yI + n * s; };
-      var yw = Y(sc.ybot) + 16 + (fs - 12.5), yB = Math.max(Y(sc.depth), yw + fs + 16), st = over ? 'no' : gap < 20 ? 'mid' : 'ok', out = '';
+      // the room's front: its depth, as typed; the width the pieces take is written under them, or past the front wall if no room is left
+      var yFr = Y(Dr), ywIn = Y(sc.ybot) + 16 + (fs - 12.5), yw = ywIn + fs + 6 <= yFr ? ywIn : Math.max(yFr + TH, Y(sc.ybot)) + 18 + (fs - 12.5);
+      var yB = yFr, st = over ? 'no' : gap < 20 ? 'mid' : 'ok', out = '';
       // the floor: a faint grid inside the walls, every 10 cm (or 20, or 50 when the drawing is small)
       var g = c(10) >= 7 ? 10 : c(20) >= 7 ? 20 : 50, gl = '';
       for (var gy = yI + c(g); gy < yB - 1; gy += c(g)) gl += 'M' + f(xL) + ' ' + f(gy) + 'H' + f(xR);
@@ -6794,11 +6892,21 @@ var T = function (s) { return s; };
         // what would stand past the walls
         var rc = p.rot ? [0, 0] : reach(p.t, p.w), a1 = X(p.x), a2 = X(p.x + p.fw), oy = Y(p.y - rc[0]), oh = (p.fd + rc[0] + rc[1]) * s;
         if (a1 < xL) ov += R(Math.max(a1, 0), oy, xL - Math.max(a1, 0), oh); if (a2 > xR) ov += R(xR, oy, Math.min(a2, 640) - xR, oh);
+        var bo = p.y + p.fd + rc[1], ia = Math.max(a1, xL), ib = Math.min(a2, xR); if (bo > Dr && ib > ia) ov += R(ia, yFr, ib - ia, (bo - Dr) * s);
       });
       if (ov) out += P('kov', ov);
-      // the walls: the back wall and the two sides, in poché, open towards the room
-      out += P('kpc', 'M' + f(xL - TH) + ' ' + f(yW) + 'H' + f(xR + TH) + 'V' + f(yB) + 'H' + f(xR) + 'V' + f(yI) + 'H' + f(xL) + 'V' + f(yB) + 'H' + f(xL - TH) + 'Z', '#3f2723');
-      out += P('kw', 'M' + f(xL - TH) + ' ' + f(yB) + 'V' + f(yW) + 'H' + f(xR + TH) + 'V' + f(yB) + 'M' + f(xL) + ' ' + f(yB) + 'V' + f(yI) + 'H' + f(xR) + 'V' + f(yB) + 'M' + f(xL - TH) + ' ' + f(yB) + 'H' + f(xL) + 'M' + f(xR) + ' ' + f(yB) + 'H' + f(xR + TH));
+      // the walls, in poché: the back, the two sides, and (v61) the front at the room's depth
+      out += P('kpc', 'M' + f(xL - TH) + ' ' + f(yW) + 'H' + f(xR + TH) + 'V' + f(yFr + TH) + 'H' + f(xL - TH) + 'Z' + 'M' + f(xL) + ' ' + f(yI) + 'V' + f(yFr) + 'H' + f(xR) + 'V' + f(yI) + 'Z', '#3f2723');
+      out += P('kw', 'M' + f(xL - TH) + ' ' + f(yW) + 'H' + f(xR + TH) + 'V' + f(yFr + TH) + 'H' + f(xL - TH) + 'Z' + 'M' + f(xL) + ' ' + f(yI) + 'H' + f(xR) + 'V' + f(yFr) + 'H' + f(xL) + 'Z');
+      // the door (v61): an opening in the front wall as wide as the door typed (a usual 90 cm when the piece comes in parts),
+      // near a corner, its leaf open into the room and its swing dashed, as the wardrobes' doors are drawn
+      var dwd = door || 90, dx1 = xR - c(20), dx0 = dx1 - c(dwd);
+      if (dx0 < xL + c(10)) { dx0 = cx - c(dwd) / 2; dx1 = dx0 + c(dwd); }
+      var dIn = ywIn + fs + 6 <= yFr, dLy = dIn ? yFr + TH + fs + 2 : yFr - c(dwd) - 7;
+      out += '<path class="kcut" d="' + R(dx0, yFr - .6, dx1 - dx0, TH + 1.2) + '"/>';
+      out += P('kw', 'M' + f(dx0) + ' ' + f(yFr) + 'V' + f(yFr + TH) + 'M' + f(dx1) + ' ' + f(yFr) + 'V' + f(yFr + TH));
+      out += P('ko', R(dx1 - c(4), yFr - c(dwd), c(4), c(dwd)), '#efe6d8') + P('kt ksw', 'M' + f(dx0) + ' ' + f(yFr) + 'A' + f(c(dwd)) + ' ' + f(c(dwd)) + ' 0 0 1 ' + f(dx1) + ' ' + f(yFr - c(dwd)));
+      out += T((dx0 + dx1) / 2, dLy, door ? L('باب ', 'Door ') + door + cm : L('الباب', 'Door'), 'kgl');
       if (over && sc.one) { var p0 = sc.items[0]; out += P('kovl', R(X(p0.x), Y(p0.y), p0.w * s, p0.d * s, c(3))); }
       // dimension lines, as on the home's plan: a line, its two stops and their ticks
       var DL = function (a, b, y, cls) { return P('kdl ' + (cls || ''), 'M' + f(a) + ' ' + f(y) + 'H' + f(b) + 'M' + f(a) + ' ' + f(y - 6) + 'V' + f(y + 6) + 'M' + f(b) + ' ' + f(y - 6) + 'V' + f(y + 6) + 'M' + f(a - 3.5) + ' ' + f(y + 3.5) + 'L' + f(a + 3.5) + ' ' + f(y - 3.5) + 'M' + f(b - 3.5) + ' ' + f(y + 3.5) + 'L' + f(b + 3.5) + ' ' + f(y - 3.5)); };
@@ -6816,24 +6924,86 @@ var T = function (s) { return s; };
           else out += T(xL - TH - 8 - tw(lab) / 2, ym + fs * .36, lab, 'kgt s-' + st) + T(xR + TH + 8 + tw(lab) / 2, ym + fs * .36, lab, 'kgt s-' + st);
         } else if (over && xL - x0 >= tw(lab) + 6) out += T((x0 + xL - TH) / 2, ym + fs * .36, lab, 'kgt s-no') + T((x1 + xR + TH) / 2, ym + fs * .36, lab, 'kgt s-no');
       }
+      // the depth (v61), as the front view shows the height: the room's depth on one side; on the other, what the pieces
+      // take from the back wall and what is left in front of them to move around
+      var DV = function (x, a, b, cls) { return P('kdl ' + (cls || ''), 'M' + f(x) + ' ' + f(a) + 'V' + f(b) + 'M' + f(x - 6) + ' ' + f(a) + 'H' + f(x + 6) + 'M' + f(x - 6) + ' ' + f(b) + 'H' + f(x + 6) + 'M' + f(x - 3.5) + ' ' + f(a + 3.5) + 'L' + f(x + 3.5) + ' ' + f(a - 3.5) + 'M' + f(x - 3.5) + ' ' + f(b + 3.5) + 'L' + f(x + 3.5) + ' ' + f(b - 3.5)); };
+      var VT = function (x, y, str, cls) { return '<text x="' + f(x) + '" y="' + f(y) + '" class="' + (cls || '') + '" transform="rotate(-90 ' + f(x) + ' ' + f(y) + ')">' + str + '</text>'; };
+      var offD = sc.one && half >= .5 && !over && na - xL < tw(lab) + 10 ? tw(lab) + 14 : 0, xA = xL - TH - 16 - offD, xB = xR + TH + 16 + offD;
+      out += DV(xA, yI, yFr) + VT(xA - 7, (yI + yFr) / 2, L('العمق ', 'Depth ') + Dr + cm, 'kdt');
+      var dTake = Math.round(sc.ybot), gD = Dr - dTake, walk = Math.max(40, Math.round(sc.depth - sc.ybot)), dst2 = gD < 0 ? 'no' : gD < walk - 5 ? 'mid' : 'ok', yT2 = Y(Math.min(dTake, Dr));
+      out += DV(xB, yI, Y(dTake), 'kpc2') + VT(xB + 7 + fs * .78, (yI + Math.min(Y(dTake), yFr)) / 2, dTake + cm, 'kpt');
+      if (gD > 0) {
+        var gl3 = gD + cm, seg3 = yFr - yT2;
+        out += DV(xB, yT2, yFr, 's-' + dst2) + (seg3 >= tw(gl3) + 10 ? VT(xB + 7 + fs * .78, (yT2 + yFr) / 2, gl3, 'kgt s-' + dst2) : T(xB + 10 + tw(gl3) / 2, yT2 + seg3 / 2 + fs * .36, gl3, 'kgt s-' + dst2));
+      } else if (gD < 0) out += T(xB + 12 + tw('+' + (-gD) + cm) / 2, (yFr + Y(dTake)) / 2 + fs * .36, '+' + (-gD) + cm, 'kgt s-no');
       // a scale bar under the drawing
-      var sb = c(50) >= fs * 6 ? 50 : c(100) >= fs * 6 ? 100 : 200, sbw = c(sb), sx = cx - sbw / 2, sy = yB + 22, sgn = RTL ? -1 : 1, sa = RTL ? sx + sbw : sx;
+      var sb = c(50) >= fs * 6 ? 50 : c(100) >= fs * 6 ? 100 : 200, sbw = c(sb), sx = cx - sbw / 2, sy = Math.max(yFr + TH + (ywIn + fs + 6 <= yFr ? fs + 10 : 0), yw + fs + 6) + 22, sgn = RTL ? -1 : 1, sa = RTL ? sx + sbw : sx;
       out += P('ksbf', R(RTL ? sa - sbw / 2 : sa, sy, sbw / 2, 4), '#3f2723') + P('ksb', R(sx, sy, sbw, 4));
       out += T(sa, sy + fs + 9, '0', 'ksbt') + (sbw / 2 >= fs * 2.8 ? T(sa + sgn * sbw / 2, sy + fs + 9, sb / 2, 'ksbt') : '') + T(sa + sgn * sbw, sy + fs + 9, sb + cm, 'ksbt');
-      svg.setAttribute('viewBox', '0 0 640 ' + f(sy + fs + 16));
+      // ---------- the front view (v60), under the plan at the same scale, so its walls stand under the plan's: the room
+      // cut through and seen from inside towards the back wall, the floor, walls and ceiling in poché, each piece as it
+      // stands (the nearest drawn last), its height above it, and on the outside the ceiling's height and what the
+      // tallest piece leaves under it ----------
+      var yV = sy + fs + 9 + 30 + fs, vName = L('من الأمام', 'From the front'), vw = tw(vName) + 24;
+      out += P('kdv', 'M' + f(16) + ' ' + f(yV - fs * .35) + 'H' + f(cx - vw / 2) + 'M' + f(cx + vw / 2) + ' ' + f(yV - fs * .35) + 'H' + f(624)) + T(cx, yV, vName, 'kvt');
+      var yC = yV + fs + 26 + TH, yF = yC + Hc * s, Zf = function (z) { return yF - z * s; };
+      var eg = '';
+      for (var ez = g; ez < Hc - .5; ez += g) eg += 'M' + f(xL) + ' ' + f(Zf(ez)) + 'H' + f(xR);
+      for (var egx = cx - Math.floor(W / 2 / g) * c(g); egx < xR - 1; egx += c(g)) if (egx > xL + 1) eg += 'M' + f(egx) + ' ' + f(yC) + 'V' + f(yF);
+      out += P('kfb', eg);
+      var tops = [], eov = '';
+      sc.items.slice().sort(function (a, b) { return a.y - b.y; }).forEach(function (p) {
+        var h = dims(p.id).d[2], ex = X(p.x), ew = p.fw * s;
+        out += '<g transform="translate(' + f(ex) + ' ' + f(Zf(h)) + ')">' + (p.rot ? elevSide(p.t, p.fw, h, s, p.rot < 0) : elev(p.t, p.w, h, s)) + '</g>';
+        tops.push({ a: ex, b: ex + ew, h: h, y: p.y });
+        if (h > Hc) eov += R(ex, Zf(h), ew, (h - Hc) * s);
+        if (ex < xL) eov += R(Math.max(ex, 0), Zf(h), xL - Math.max(ex, 0), h * s); if (ex + ew > xR) eov += R(xR, Zf(h), Math.min(ex + ew, 640) - xR, h * s);
+      });
+      out += P('kpc', 'M' + f(xL - TH) + ' ' + f(yC - TH) + 'H' + f(xR + TH) + 'V' + f(yF + TH) + 'H' + f(xL - TH) + 'Z' + 'M' + f(xL) + ' ' + f(yC) + 'V' + f(yF) + 'H' + f(xR) + 'V' + f(yC) + 'Z', '#3f2723');
+      out += P('kw', 'M' + f(xL - TH) + ' ' + f(yC - TH) + 'H' + f(xR + TH) + 'V' + f(yF + TH) + 'H' + f(xL - TH) + 'Z' + 'M' + f(xL) + ' ' + f(yC) + 'H' + f(xR) + 'V' + f(yF) + 'H' + f(xL) + 'Z');
+      if (eov) out += P('kov', eov);
+      // each piece's height above it, unless a taller piece stands where the words would go
+      tops.forEach(function (o) {
+        var lb = o.h + cm, ly = Zf(o.h) - 7;
+        if (o.b - o.a < tw(lb) * .7 || ly - fs < yC + 2) return;
+        if (tops.some(function (q) { return q !== o && q.h > o.h && q.b > o.a + 2 && q.a < o.b - 2; })) return;
+        out += T(Math.max(xL + tw(lb) / 2 + 4, Math.min(xR - tw(lb) / 2 - 4, (o.a + o.b) / 2)), ly, lb, 'kht');
+      });
+      // the dimensions outside the walls: the ceiling on one side; on the other, the tallest piece and the room above it
+      xA = xL - TH - 16; xB = xR + TH + 16;
+      out += DV(xA, yC, yF) + VT(xA - 7, (yC + yF) / 2, L('السقف ', 'Ceiling ') + Hc + cm, 'kdt');
+      var hT = 0; tops.forEach(function (o) { hT = Math.max(hT, o.h); });
+      var gH = Hc - hT, hst = gH < 0 ? 'no' : gH < 10 ? 'mid' : 'ok', yT = Zf(Math.min(hT, Hc));
+      out += DV(xB, yT, yF, 'kpc2') + VT(xB + 7 + fs * .78, (yT + yF) / 2, hT + cm, 'kpt');
+      if (gH > 0) {
+        var gl2 = gH + cm, seg = yT - yC;
+        out += DV(xB, yC, yT, 's-' + hst) + (seg >= tw(gl2) + 10 ? VT(xB + 7 + fs * .78, (yC + yT) / 2, gl2, 'kgt s-' + hst) : T(xB + 10 + tw(gl2) / 2, yC + seg / 2 + fs * .36, gl2, 'kgt s-' + hst));
+      } else if (gH < 0) out += T(cx, yC - TH - 8, '+' + (-gH) + cm, 'kgt s-no');
+      svg.setAttribute('viewBox', '0 0 640 ' + f(yF + TH + 14));
       svg.innerHTML = out;
       // the verdict: a heading, then a line for the place, (for a set) the depth, and the door
       var rows = [], what = sc.one ? L('القطعة', 'The piece') : L('المجموعة', 'The set');
       if (sc.one) {
-        if (over) rows.push(['no', L('المكان', 'Place'), L('القطعة أعرض من المكان بـ ', 'The piece is wider than the place by ') + (-gap) + cm + '.']);
+        if (over) rows.push(['no', L('المكان', 'Place'), L('القطعة أعرض من المكان بـ\u00a0', 'The piece is wider than the place by ') + (-gap) + cm + '.']);
         else if (gap < 2) rows.push(['mid', L('المكان', 'Place'), L('تملأ المكان تمامًا، فننصح بمعاينته قبل الطلب.', 'It fills the place exactly; we suggest a visit before you order.')]);
         else if (gap < 20) rows.push(['mid', L('المكان', 'Place'), L('يتبقى ', 'Only ') + gap + cm + L(' فقط، فننصح بمعاينة المكان قبل الطلب.', ' to spare; we suggest a visit before you order.')]);
         else rows.push(['ok', L('المكان', 'Place'), L('يتبقى ', 'With ') + lab + L(' على كل جانب.', ' on each side.')]);
       } else {
-        if (over) rows.push(['no', L('المكان', 'Place'), L('تحتاج ', 'It needs ') + need + cm + L(' من الحائط إلى الحائط، أي أعرض من المكان بـ ', ' from wall to wall, more than the place by ') + (-gap) + cm + '.']);
+        if (over) rows.push(['no', L('المكان', 'Place'), L('تحتاج ', 'It needs ') + need + cm + L(' من الحائط إلى الحائط، أي أعرض من المكان بـ\u00a0', ' from wall to wall, more than the place by ') + (-gap) + cm + '.']);
         else if (gap < 20) rows.push(['mid', L('المكان', 'Place'), L('تحتاج ', 'It needs ') + need + cm + L('، فيتبقى ', ', leaving only ') + gap + cm + L(' فقط؛ ننصح بمعاينة المكان.', '; we suggest a visit.')]);
         else rows.push(['ok', L('المكان', 'Place'), L('تحتاج ', 'It needs ') + need + cm + L('، ويتبقى ', ', with ') + gap + cm + L(' للحركة.', ' to spare.')]);
-        rows.push(['ok', L('العمق', 'Depth'), L('وتحتاج الغرفة عمقًا لا يقل عن ', 'and a room at least ') + Math.ceil(sc.depth / 10) * 10 + cm + L('.', ' deep.')]);
+      }
+      // the depth (v61): what the pieces take from the back wall against the room's depth, and the room left to move
+      rows.push([dst2, L('العمق', 'Depth'), gD < 0 ? L('تحتاج ', 'It needs ') + dTake + cm + L(' من الحائط، أي أكثر من عمق المكان بـ\u00a0', ' from the wall, more than the place’s depth by ') + (-gD) + cm + '.'
+        : gD < walk - 5 ? L('يتبقى ', 'Only ') + gD + cm + L(' أمامها للحركة، وننصح بـ ', ' left in front of it; we suggest ') + walk + cm + '.' : L('يتبقى ', 'With ') + gD + cm + L(' أمامها للحركة.', ' in front of it to move around.')]);
+      // the height (v60): the piece's, or each piece of the set tallest first, against the ceiling
+      var hs = [], hseen = {};
+      (sc.one ? [id] : units).forEach(function (x) { if (hseen[x]) return; hseen[x] = 1; hs.push([x, dims(x).d[2]]); });
+      hs.sort(function (a, b) { return b[1] - a[1]; });
+      if (hs.length) {
+        var hName = function (x) { return PRODUCTS[x].n.split(/\s*[،,]\s*/)[0]; }, hList = sc.one ? L('ارتفاعها ', 'It stands ') + hT + cm + L('', ' tall') : hs.map(function (h) { return hName(h[0]) + ' ' + h[1]; }).join(' · ') + cm;
+        rows.push([hst, L('الارتفاع', 'Height'), hList + (gH < 0 ? L('، أي أعلى من السقف بـ\u00a0', ', more than the ceiling by ') + (-gH) + cm + '.'
+          : gH < 10 ? L('؛ لا يتبقى إلا ', '; only ') + gH + cm + L(' حتى السقف.', ' left to the ceiling.') : L('؛ ويتبقى ', '; with ') + gH + cm + L(' حتى السقف.', ' to the ceiling.'))]);
       }
       // the door: the slimmest side of each piece that does not come in parts
       var dst = 'ok', seen = {}, stuck = [], tilt = false, solid = units.filter(function (x) { if (seen[x] || inRoom(x)) return false; seen[x] = 1; return true; });
@@ -6845,7 +7015,7 @@ var T = function (s) { return s; };
         else rows.push(['no', L('الباب', 'Door'), stuck.map(function (x) { return PRODUCTS[x].n; }).join(L('، ', ', ')) + L(' لا تمر من باب عرضه ', ' will not go through a ') + door + cm + L('.', ' door.')]);
       } else if (sc.one && tilt) { var d2 = dims(id).d; rows.push(['ok', L('الباب', 'Door'), L('تمر من الباب على جانبها، فأصغر أبعادها ', 'It goes through the door on its side, at its slimmest ') + Math.min(d2[1], d2[2]) + cm + '.']); }
       else rows.push(['ok', L('الباب', 'Door'), sc.one ? L('تمر من باب عرضه ', 'It goes through a ') + door + cm + L('.', ' door.') : L('كل قطعها تمر من باب عرضه ', 'Every piece goes through a ') + door + cm + L('.', ' door.')]);
-      if (dst === 'no') st = 'no';
+      if (dst === 'no' || hst === 'no' || dst2 === 'no') st = 'no'; else if ((hst === 'mid' || dst2 === 'mid') && st === 'ok') st = 'mid';
       var head = st === 'no' ? L('تحتاج مقاسًا خاصًا', 'It needs a size of its own') : st === 'mid' ? L('تناسب، بالكاد', 'It fits, just') : sc.one ? L('تناسب مساحتك', 'It fits your space') : L('تناسب مساحتك كاملة', 'The whole set fits');
       var ic = st === 'ok' ? ICON('check') : '<i aria-hidden="true"></i>';
       $('#fitR').className = 'pd-fv ' + st;
