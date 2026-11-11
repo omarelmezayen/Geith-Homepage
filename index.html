@@ -3380,12 +3380,12 @@ html.f-lock, html.f-lock body { overflow: hidden; }
 }
 
 /* ======================= v50: reviews ======================= */
-/* the score as the logo's diamonds, filled to it (the last one partly) */
-.dmd { display: inline-flex; gap: 3px; vertical-align: middle; }
-.dmd i { width: 11px; height: 11px; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); background: linear-gradient(90deg, var(--burg) var(--f), rgba(63, 39, 35, .16) var(--f)); }
+/* the score as five stars, filled to it (the last one partly); stars since v58, at the user's request (they were the logo's diamonds) */
+.dmd { display: inline-flex; gap: 2px; vertical-align: middle; }
+.dmd i { width: 14px; height: 14px; clip-path: polygon(50% 0, 61.8% 35.3%, 98% 35.3%, 68.8% 57.1%, 79.4% 91.6%, 50% 70.6%, 20.6% 91.6%, 31.2% 57.1%, 2% 35.3%, 38.2% 35.3%); background: linear-gradient(90deg, var(--burg) var(--f), rgba(63, 39, 35, .16) var(--f)); }
 :where(:root[dir=rtl]) .dmd i { background: linear-gradient(270deg, var(--burg) var(--f), rgba(63, 39, 35, .16) var(--f)); }
-.dmd.lg { gap: 4px; }
-.dmd.lg i { width: 15px; height: 15px; }
+.dmd.lg { gap: 3px; }
+.dmd.lg i { width: 19px; height: 19px; }
 /* under the name: the score, and the way down to the reviews */
 .pd-rate { display: inline-flex; align-items: center; gap: var(--s2); margin-top: var(--s2); font-size: 13.5px; color: var(--muted); transition: color .3s; }
 .pd-rate b { font-weight: 600; color: var(--esp); }
@@ -3520,6 +3520,78 @@ html.f-lock, html.f-lock body { overflow: hidden; }
 /* the mask is a clip-path reaching .34em under the line (a padding would push the content under the headline down) */
 .h2 .ln, .hc-t .ln { overflow: visible; clip-path: inset(0 -.3em -.34em -.3em); }
 .h2 .ln > *, .hc-t .ln > * { padding-bottom: .5em; margin-bottom: -.5em; }
+
+/* ======================= v57: the listings' simple head ======================= */
+/* the user wanted the collection pages simpler at the top: which page this is and a line, the way to shop at its end, the
+   kinds of piece as plain chips, then the products. No photographs, no big headline, no facts */
+.pl-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: var(--s4) var(--s6); padding-block: clamp(20px, 2.6vw, 36px) var(--s5); }
+.pl-head-t { min-width: 0; }
+.pl-h1 { margin: 0; font-size: clamp(30px, 2.8vw, 42px); font-weight: 700; line-height: 1.15; color: var(--burg); }
+:where(:root[dir=rtl]) .pl-h1 { line-height: 1.25; }
+.pl-sub { margin: var(--s2) 0 0; font-size: 15px; line-height: 1.6; color: var(--muted); }
+.pl-head .pg-sw { margin-top: 0; }
+/* the kinds of piece: chips with their counts, the chosen one dark, like the way-to-shop switch */
+.pl-chips { padding-bottom: var(--s5); }
+.pl-chips-in { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.pl-chips .pl-type { --cut: 6px; display: inline-flex; justify-items: initial; align-items: center; gap: var(--s2); height: 38px; padding: 0 16px; font-size: 13.5px; font-weight: 500; text-align: start; color: var(--esp); background: rgba(63, 39, 35, .06); transition: background .3s, color .3s;
+  clip-path: polygon(var(--cut) 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, var(--cut) 100%, 0 calc(100% - var(--cut)), 0 var(--cut)); }
+.pl-chips .pl-type small { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; transition: color .3s; }
+.pl-chips .pl-type:hover { background: rgba(63, 39, 35, .11); }
+.pl-chips .pl-type[aria-pressed="true"] { background: var(--esp); color: var(--ivory); }
+.pl-chips .pl-type[aria-pressed="true"] small { color: rgba(248, 241, 231, .7); }
+/* the sets' cards keep the same air under the bar as the pieces' (they sat right against it) */
+.pl-shop .sc-grid { padding-top: clamp(28px, 3vw, 42px); }
+@media (max-width: 600px) {
+  .pl-head { gap: var(--s4); padding-block: var(--s4); }
+  .pl-h1 { font-size: 28px; }
+  .pl-sub { font-size: 14px; }
+  /* the chips scroll inside the page's margins (v58: they ran to the screen's edge) */
+  .pl-chips { padding-bottom: var(--s4); }
+  .pl-chips-in { flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; }
+  .pl-chips-in::-webkit-scrollbar { display: none; }
+  .pl-chips .pl-type { flex: none; height: 36px; padding: 0 14px; }
+  .pl-shop .sc-grid { padding-top: 22px; }
+}
+
+/* ======================= v58: what the whole set saves ======================= */
+/* the price: the whole set's, what its pieces cost one by one struck through, and the saving as a burgundy plate */
+.ss-price s, .sc-pr s { font-size: 15px; color: var(--muted); text-decoration-thickness: 1px; }
+.sc-pr s { font-size: 13px; }
+.ss-price .ss-off { --cut: 6px; display: inline-flex; align-items: center; height: 30px; padding: 0 12px; font-size: 13px; font-weight: 600; color: var(--ivory); background: var(--burg);
+  clip-path: polygon(var(--cut) 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, var(--cut) 100%, 0 calc(100% - var(--cut)), 0 var(--cut)); }
+.ss-why { margin: var(--s2) 0 0; font-size: 13.5px; line-height: 1.7; color: var(--muted); }
+/* «ما تشمله المجموعة» ends as a receipt: one by one, the discount, the whole set */
+.ss-rc { display: grid; gap: var(--s2); margin: var(--s4) 0 0; padding-top: var(--s3); border-top: 1px solid var(--line); }
+.ss-rc > div { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s4); font-size: 14px; color: var(--muted); }
+.ss-rc dt, .ss-rc dd { margin: 0; }
+.ss-rc dd { white-space: nowrap; }
+.ss-rc .off { color: var(--burg); font-weight: 500; }
+.ss-rc .tot { margin-top: var(--s1); padding-top: var(--s3); border-top: 1px solid var(--line); color: var(--esp); font-weight: 600; }
+.ss-rc .tot dd { font-size: 18px; }
+/* the builder's bar: the total after the discount, the one-by-one sum struck, and a line on the saving */
+.ss-tw { display: inline-flex; align-items: baseline; gap: var(--s3); }
+.ss-tw s { font-size: 14px; color: rgba(248, 241, 231, .5); }
+.ss-tw s:empty { display: none; }
+.ss-note { font-size: 13.5px; color: var(--sand); }
+.ss-note b { font-weight: 600; color: var(--ivory); }
+.ss-note:empty { display: none; }
+/* the sticky bar and the cart */
+.pd-bar-t .ss-bar-off { font-style: normal; font-weight: 600; color: var(--burg); }
+.ct-sum .ct-set dt small { display: block; font-size: 12px; color: var(--muted); }
+.ct-sum .ct-set dd { font-weight: 500; color: #3f6b45; }
+@media (max-width: 600px) {
+  .pd-bar-t .ss-bar-off { display: none; }
+  .ss-price .ss-off { height: 28px; font-size: 12.5px; }
+}
+
+/* ======================= v59: the set card's price ======================= */
+/* the price alone, no «المجموعة كاملة» (the card is a set already), and the struck one-by-one sum on the same line, not
+   under it; phones show the price only (user request) */
+.pc-price.sc-pr { flex-direction: row; flex-wrap: nowrap; align-items: baseline; gap: var(--s3); }
+.pc-price.sc-pr s { font-size: 13px; white-space: nowrap; }
+@media (max-width: 600px) {
+  .pc-price.sc-pr s { display: none; }
+}
 </style>
 </head>
 <body>
@@ -5961,19 +6033,6 @@ var T = function (s) { return s; };
     $$('.rm-line path').forEach(function (p) { p.setAttribute('d', 'M0 128.14V30L30 0H70L100 30V128.14L93 135.14H7Z'); });
     var RMLINE = (function () { var l = $('#rmTrack .rm-line'); return l ? l.outerHTML : ''; })();
     var dm = function (d, m) { return m ? '<span class="cp-d">' + d + '</span><span class="cp-m">' + m + '</span>' : d; };
-    function heroMedia(k, C) {
-      var swm = $$('#collections .swm img'), tile = $$('#rmTrack .rm img')[C.tile], big = null, set = null;
-      var arch = tile ? '<span class="pl-arch"><span class="pl-arch-in"><img src="' + srcOf(tile) + '" alt="">' + RMLINE + '</span></span>' : '';
-      if (MAINPH[k] != null) { big = swm[MAINPH[k]]; set = PHSET[MAINPH[k]]; }
-      else if (k === 'all') big = $('.hero .hs img');
-      if (!big) {
-        // no wide photograph of this room: its best pieces side by side in the same wide frame, so it opens like the others
-        var mos = bestFirst(inCat(k)).slice(0, 3).map(function (x) { return srcOf($('img.b', cardOf(x)) || imgOf(x)); });
-        return '<figure class="pl-media wide rv-up" style="--i:1"><span class="pl-big"><span class="sc-mos n' + mos.length + '">' + mos.map(function (u) { return '<img src="' + u + '" alt="">'; }).join('') + '</span></span>' + arch + '</figure>';
-      }
-      var cap = set && listed.some(function (x) { return setOf(x) === set; }) ? '<a class="pl-cap" href="#/set/' + set + '"><span>' + L('في الصورة', 'In the photo') + '</span><b>' + PRODUCTS[ids.filter(function (x) { return setOf(x) === set; })[0]].c + '</b></a>' : '';
-      return '<figure class="pl-media wide rv-up" style="--i:1"><span class="pl-big"><img src="' + srcOf(big) + '" alt=""></span>' + cap + arch + '</figure>';
-    }
     function renderC(r) {
       var k = r.cat, C = CATS[k], all = inCat(k), sets = [], types = [];
       cur = r;
@@ -5987,24 +6046,18 @@ var T = function (s) { return s; };
       if (r.f) { if (SETCAT[r.f]) fState.set = [r.f]; else fState.types = r.f.split(',').filter(function (t) { return FAM[t]; }); }
       fApply = function (count) { var n = shownPieces().length; if (count) return n; paintGrid(true); paintBar(); };
       document.title = C.n + ' · ' + brand;
-      // the kinds of piece, as pictures; the first gathers every piece
-      var mosN = Math.min(4, all.length), mosaic = bestFirst(all).slice(0, 4).map(function (id) { return '<img src="' + srcOf(imgOf(id)) + '" alt="">'; }).join('');
-      var typesRow = types.length < 2 ? '' : '<section class="wrap pl-types" aria-label="' + L('تسوّق حسب القطعة', 'Shop by piece') + '"><h2 class="pl-types-h rv-up">' + L('تسوّق حسب القطعة', 'Shop by piece') + '</h2><div class="pl-types-row">' +
-        '<button type="button" class="pl-type rv-up" data-t="" aria-pressed="' + !fState.types.length + '"><span class="pl-type-im mosaic n' + mosN + '">' + mosaic + FR(1) + '</span><b>' + L('كل القطع', 'Every piece') + '</b><small>' + nPieces(all.length) + '</small></button>' +
-        types.map(function (t, i) {
+      // the kinds of piece, as plain chips under the head; the first gathers every piece
+      var chips = types.length < 2 ? '' : '<nav class="wrap pl-chips rv-up" style="--i:2" aria-label="' + L('تسوّق حسب القطعة', 'Shop by piece') + '"><div class="pl-chips-in">' +
+        '<button type="button" class="pl-type" data-t="" aria-pressed="' + !fState.types.length + '">' + L('كل القطع', 'Every piece') + '<small>' + all.length + '</small></button>' +
+        types.map(function (t) {
           var of = bestFirst(all.filter(function (id) { return TYPE[id] === t; }));
-          return '<button type="button" class="pl-type rv-up" style="--i:' + (i + 1) + '" data-t="' + t + '" aria-pressed="' + (fState.types.indexOf(t) > -1) + '"><span class="pl-type-im"><img src="' + srcOf(imgOf(of[0])) + '" alt="">' + FR(1) + '</span><b>' + PRODUCTS[of[0]].t + '</b><small>' + nPieces(of.length) + '</small></button>';
-        }).join('') + '</div></section>';
+          return '<button type="button" class="pl-type" data-t="' + t + '" aria-pressed="' + (fState.types.indexOf(t) > -1) + '">' + PRODUCTS[of[0]].t + '<small>' + of.length + '</small></button>';
+        }).join('') + '</div></nav>';
       var sortItems = SORTS.map(function (s) { return '<li><button type="button" role="option" data-s="' + s[0] + '">' + s[1] + '</button></li>'; }).join('');
+      // the head (v57): which page this is and one line, the way to shop at its end; the products start right after
       pg.innerHTML = crumbs(k === 'all' ? [[L('الرئيسية', 'Home'), '#top'], [C.n]] : [[L('الرئيسية', 'Home'), '#top'], [CATS.all.n, '#/c/all'], [C.n]]) +
-        '<header class="wrap pl-hero"><div class="pl-hero-t">' +
-          '<span class="eyebrow rv-up">' + nPieces(all.length) + (sets.length > 1 ? ' · ' + nSets(sets.length) : '') + '</span>' +
-          '<h1 class="h2 rv-up" style="--i:1">' + head2(C.h[0], C.h[1]) + '</h1>' +
-          '<p class="lead rv-up" style="--i:2">' + dm(C.lead, C.m) + '</p>' +
-          '<ul class="pl-facts rv-up" style="--i:3"><li>' + dm(L('تفصيل بالمقاس', 'Made to measure'), L('بمقاسك', 'To your size')) + '</li><li>' + dm(L('التوصيل والتركيب بفريقنا', 'Delivered and assembled by our team'), L('توصيل وتركيب', 'Delivery & assembly')) + '</li><li>' + dm(L('ضمان على كل قطعة', 'A warranty on every piece'), L('ضمان', 'Warranty')) + '</li></ul>' + shopSwitch(k, false) +
-        '</div>' + heroMedia(k, C) + '</header>' +
-        typesRow +
-        '<div class="pl-shop"><div class="pl-bar"><div class="wrap pl-bar-in"><div class="pl-l">' + fBar(fGroups) + '</div>' +
+        '<header class="wrap pl-head"><div class="pl-head-t"><h1 class="pl-h1 rv-up">' + C.n + '</h1><p class="pl-sub rv-up" style="--i:1">' + C.m + '</p></div>' + shopSwitch(k, false) + '</header>' +
+        chips +        '<div class="pl-shop"><div class="pl-bar"><div class="wrap pl-bar-in"><div class="pl-l">' + fBar(fGroups) + '</div>' +
           '<div class="pl-tools"><span class="pl-count" id="plCount" aria-live="polite"></span>' +
             '<div class="pl-view" role="group" aria-label="' + L('حجم الصور', 'Photo size') + '"><button type="button" data-loose="1" aria-label="' + L('صور أكبر', 'Larger photos') + '">' + IC_VIEW.big + '</button><button type="button" data-loose="0" aria-label="' + L('صور أكثر', 'More photos') + '">' + IC_VIEW.small + '</button></div>' +
             dd('plSort', L('ترتيب:', 'Sort:'), sortItems, 'sort') +
@@ -6017,7 +6070,7 @@ var T = function (s) { return s; };
         if ((b = e.target.closest('.pl-type'))) {
           var t = b.dataset.t;
           if (!t) fState.types = []; else { var i = fState.types.indexOf(t); if (i > -1) fState.types.splice(i, 1); else fState.types.push(t); }
-          fPaint(); paintBar(); paintGrid(true); toGrid(); return;
+          fPaint(); paintBar(); paintGrid(true); return;
         }
         if ((b = e.target.closest('.pl-dd > button'))) { var box = b.parentNode, op = !box.classList.contains('open'); closeDd(); box.classList.toggle('open', op); b.setAttribute('aria-expanded', op); if (op) keepIn($('ul', box)); return; }
         if ((b = e.target.closest('[data-s]'))) { sortKey = b.dataset.s; closeDd(); paintBar(); paintGrid(true); return; }
@@ -6138,11 +6191,36 @@ var T = function (s) { return s; };
     var piecesOf = function (s) { return ids.filter(function (x) { return setOf(x) === s; }); };
     var setName = function (s) { return PRODUCTS[piecesOf(s)[0]].c; };
     var setSum = function (s) { return piecesOf(s).reduce(function (a, x) { return a + PRODUCTS[x].p; }, 0); };
+    // buying the whole set (v58): its pieces together cost SET_OFF less than one by one (a placeholder rate, to confirm with
+    // Ghaith). The same price shows on the set's card, its page and its bar, and the cart takes the discount off whenever
+    // every piece of a set is in it. The home's «من …» set prices are not used here: they did not match the pieces listed
+    var SET_OFF = .1, OFF_PH = '<span class="ph">[ ' + Math.round(SET_OFF * 100) + '% ]</span>';
+    var setNet = function (s) { return piecesOf(s).length > 1 ? Math.round(setSum(s) * (1 - SET_OFF) / 100) * 100 : setSum(s); };
+    var setSave = function (s) { return setSum(s) - setNet(s); };
+    // the cart takes the whole-set discount off: a line per set whose every piece is in it, under the subtotal. It follows
+    // every repaint of the cart by watching the subtotal, which the home's paintCart writes each time
+    (function () {
+      var sub = $('#ctSub'); if (!sub) return;
+      function setOffs() {
+        $$('.ct-set').forEach(function (r) { r.remove(); });
+        var off = 0, rows = '';
+        Object.keys(SETCAT).forEach(function (s) {
+          var pcs = piecesOf(s); if (pcs.length < 2) return;
+          var k = Math.min.apply(null, pcs.map(function (x) { return cart[x] || 0; })); if (!k) return;
+          off += k * setSave(s);
+          rows += '<div class="ct-set"><dt>' + L('خصم المجموعة كاملة', 'Whole-set discount') + '<small>' + setName(s) + (k > 1 ? ' × ' + k : '') + '</small></dt><dd>' + L('', '− ') + fmt(k * setSave(s)) + '</dd></div>';
+        });
+        if (!off) return;
+        sub.parentNode.insertAdjacentHTML('afterend', rows);
+        var tot = $('#ctTot'); tot.textContent = fmt(+tot.textContent.replace(/[^0-9]/g, '') - off);
+      }
+      new MutationObserver(setOffs).observe(sub, { childList: true, characterData: true, subtree: true });
+      setOffs();
+    })();
     function setPrice(s, plain) {
-      var info = SETINFO[s] || {};
-      if (info.p) return plain ? info.pl + ' ' + info.p : '<span>' + info.pl + '</span><b>' + info.p + '</b>';
-      var lb = piecesOf(s).length > 1 ? L('المجموعة كاملة', 'The full set') : L('السعر', 'Price');
-      return plain ? lb + ' ' + fmt(setSum(s)) : '<span>' + lb + '</span><b>' + fmt(setSum(s)) + '</b>';
+      var many = piecesOf(s).length > 1, lb = many ? L('المجموعة كاملة', 'The full set') : L('السعر', 'Price');
+      if (plain) return lb + ' ' + fmt(setNet(s));
+      return '<span>' + lb + '</span><b>' + fmt(setNet(s)) + '</b>' + (many ? '<s>' + fmt(setSum(s)) + '</s>' : '');
     }
     function setDesc(s) {
       var info = SETINFO[s] || {};
@@ -6167,9 +6245,10 @@ var T = function (s) { return s; };
     // piece's swatches would be. The whole card opens the set's page
     function setCard(s, i) {
       var pcs = piecesOf(s), shown = bestFirst(listed.filter(function (x) { return setOf(x) === s; }));
-      var saved = pcs.every(function (x) { return wish.indexOf(x) > -1; }), info = SETINFO[s] || {};
+      var saved = pcs.every(function (x) { return wish.indexOf(x) > -1; });
       var alt = shown.length ? srcOf($('img.b', cardOf(shown[0])) || imgOf(shown[0])) : '';
-      var price = info.p ? '<span>' + info.pl + '</span><b>' + info.p + '</b>' : (pcs.length > 1 ? '<span>' + L('المجموعة كاملة', 'The full set') + '</span>' : '') + '<b>' + fmt(setSum(s)) + '</b>';
+      // the price alone (a set card is a whole set already), the one-by-one sum struck beside it (not on phones)
+      var price = '<b>' + fmt(setNet(s)) + '</b>' + (pcs.length > 1 ? '<s>' + fmt(setSum(s)) + '</s>' : '');
       return '<article class="sc rv-up" style="--i:' + (i % 3) + '">' +
         '<div class="sc-im"><a class="sc-link" href="#/set/' + s + '" tabindex="-1" aria-hidden="true"><span class="a">' + setMedia(s) + '</span>' + (alt && roomPhoto(s) ? '<img class="b" src="' + alt + '" alt="">' : '') + '</a>' +
           '<button type="button" class="sc-wish" data-swish="' + s + '" aria-pressed="' + saved + '" aria-label="' + L('احفظ ', 'Save ') + esc(setName(s)) + L(' في المفضلة', ' to wishlist') + '">' + ICON('heart') + '</button>' +
@@ -6191,20 +6270,15 @@ var T = function (s) { return s; };
       fGroups = [roomGroup(k, function (c) { return setsIn(c).length; }, nSets, function (v) { location.hash = '#/s' + (v ? '/' + v : ''); })];
       var cOpts = SCNT.map(function (c) { return { v: c[0], t: c[1], n: nSets(sets.filter(function (s) { return c[2](piecesOf(s).length); }).length), z: sets.some(function (s) { return c[2](piecesOf(s).length); }) }; }).filter(function (o) { return o.z; });
       if (cOpts.length > 1) fGroups.push({ k: 'n', label: L('عدد القطع', 'Pieces'), all: L('أي عدد', 'Any number'), opts: cOpts });
-      var spg = bandGroup(SB, sets.map(setSum), nSets); if (spg) fGroups.push(spg);
+      var spg = bandGroup(SB, sets.map(setNet), nSets); if (spg) fGroups.push(spg);
       fState = { room: k === 'all' ? [] : [k], n: [], price: [] }; fUnit = nSets;
       fApply = function (count) { var n = shownSets().length; if (count) return n; paintSets(true); };
       var ssortItems = SSORTS.map(function (s) { return '<li><button type="button" role="option" data-ss="' + s[0] + '">' + s[1] + '</button></li>'; }).join('');
       document.title = L('المجموعات', 'Sets') + (k === 'all' ? '' : ' · ' + C.n) + ' · ' + brand;
-      var ph = $$('#collections .swm img')[MAINPH[k] != null ? MAINPH[k] : 1], tile = $$('#rmTrack .rm img')[C.tile];
+      var SETS_EN = { living: 'Living room sets', salons: 'Salon sets', bedrooms: 'Bedroom sets', dining: 'Dining sets', kids: 'Youth room sets' };
       pg.innerHTML = crumbs(k === 'all' ? [[L('الرئيسية', 'Home'), '#top'], [L('المجموعات', 'Sets')]] : [[L('الرئيسية', 'Home'), '#top'], [L('المجموعات', 'Sets'), '#/s'], [C.n]]) +
-        '<header class="wrap pl-hero"><div class="pl-hero-t">' +
-          '<span class="eyebrow rv-up">' + nSets(sets.length) + (k === 'all' ? ' · ' + (rooms.length - 1) + L(' غرف', ' rooms') : '') + '</span>' +
-          '<h1 class="h2 rv-up" style="--i:1">' + head2(L('مجموعات', 'Sets'), k === 'all' ? L('تكتمل معًا', 'that belong together') : (RTL ? C.n : 'for ' + C.n.toLowerCase())) + '</h1>' +
-          '<p class="lead rv-up" style="--i:2">' + dm(L('غرف كاملة صُممت قطعها لتكمل بعضها: خذ المجموعة كما هي، أو اختر منها ما يناسب مساحتك.', 'Whole rooms whose pieces are designed to complete one another: take a set as it is, or choose the pieces that suit your space.'), L('غرف كاملة تكمل قطعها بعضها: خذها كما هي، أو اختر منها.', 'Whole rooms whose pieces belong together: take one as it is, or choose from it.')) + '</p>' +
-          '<ul class="pl-facts rv-up" style="--i:3"><li>' + dm(L('المجموعة كاملة بضغطة واحدة', 'The whole set in one go'), L('بضغطة واحدة', 'In one go')) + '</li><li>' + dm(L('أو قطعة قطعة', 'or piece by piece'), L('قطعة قطعة', 'Piece by piece')) + '</li><li>' + dm(L('تفصيل بالمقاس', 'Made to measure'), L('بالمقاس', 'To size')) + '</li></ul>' +
-          shopSwitch(k, true) +
-        '</div><figure class="pl-media wide rv-up" style="--i:1"><span class="pl-big"><img src="' + srcOf(ph) + '" alt=""></span>' + (tile ? '<span class="pl-arch"><span class="pl-arch-in"><img src="' + srcOf(tile) + '" alt="">' + RMLINE + '</span></span>' : '') + '</figure></header>' +
+        '<header class="wrap pl-head"><div class="pl-head-t"><h1 class="pl-h1 rv-up">' + (k === 'all' ? L('كل المجموعات', 'All sets') : L('مجموعات ' + C.n, SETS_EN[k])) + '</h1>' +
+          '<p class="pl-sub rv-up" style="--i:1">' + L('غرف كاملة تكمل قطعها بعضها: خذها كما هي، أو اختر منها.', 'Whole rooms whose pieces belong together: take one as it is, or choose from it.') + '</p></div>' + shopSwitch(k, true) + '</header>' +
         '<div class="pl-shop"><div class="pl-bar"><div class="wrap pl-bar-in"><div class="pl-l">' + fBar(fGroups) + '</div>' +
           '<div class="pl-tools"><span class="pl-count" id="plCount" aria-live="polite"></span>' +
             '<div class="pl-view" role="group" aria-label="' + L('حجم الصور', 'Photo size') + '"><button type="button" data-sloose="1" aria-label="' + L('صور أكبر', 'Larger photos') + '">' + IC_VIEW.big + '</button><button type="button" data-sloose="0" aria-label="' + L('صور أكثر', 'More photos') + '">' + IC_VIEW.small + '</button></div>' +
@@ -6228,9 +6302,9 @@ var T = function (s) { return s; };
     var sSort = 'best', sLoose = !!store.get('scLoose', false), setsReady = false;
     function shownSets() {
       var F = fState, c = F.n.length ? SCNT.filter(function (x) { return x[0] === F.n[0]; })[0] : null;
-      var list = setsIn(cur.cat).filter(function (s) { return (!c || c[2](piecesOf(s).length)) && (!F.price.length || inBand(setSum(s), SB[+F.price[0]])); });
-      if (sSort === 'low') list.sort(function (a, b) { return setSum(a) - setSum(b); });
-      else if (sSort === 'high') list.sort(function (a, b) { return setSum(b) - setSum(a); });
+      var list = setsIn(cur.cat).filter(function (s) { return (!c || c[2](piecesOf(s).length)) && (!F.price.length || inBand(setNet(s), SB[+F.price[0]])); });
+      if (sSort === 'low') list.sort(function (a, b) { return setNet(a) - setNet(b); });
+      else if (sSort === 'high') list.sort(function (a, b) { return setNet(b) - setNet(a); });
       else if (sSort === 'many') list.sort(function (a, b) { return piecesOf(b).length - piecesOf(a).length; });
       return list;
     }
@@ -6266,7 +6340,12 @@ var T = function (s) { return s; };
       if ((shots.length - 1) % 2) { var crs = $$('.cr .crs-im img'), cr = crs[CARVED[s] ? 1 : 0]; if (cr) shots.push({ src: srcOf(cr), alt: cr.alt }); }
       var allSaved = function () { return pcs.every(function (x) { return wish.indexOf(x) > -1; }); };
       document.title = name + ' · ' + brand;
-      var inc = '<ul class="ss-inc">' + pcs.map(function (x) { return '<li><span>' + PRODUCTS[x].n + '<small>' + PRODUCTS[x].t + '</small></span><b>' + fmt(PRODUCTS[x].p) + '</b></li>'; }).join('') + '</ul>';
+      var many = pcs.length > 1;
+      // what the set includes, priced: each piece, then one by one against the whole set, as a receipt
+      var inc = '<ul class="ss-inc">' + pcs.map(function (x) { return '<li><span>' + PRODUCTS[x].n + '<small>' + PRODUCTS[x].t + '</small></span><b>' + fmt(PRODUCTS[x].p) + '</b></li>'; }).join('') + '</ul>' +
+        (many ? '<dl class="ss-rc"><div><dt>' + L('كل قطعة لوحدها', 'Piece by piece') + '</dt><dd><s>' + fmt(setSum(s)) + '</s></dd></div>' +
+          '<div class="off"><dt>' + L('خصم المجموعة كاملة ', 'Whole-set discount ') + OFF_PH + '</dt><dd>' + L('', '− ') + fmt(setSave(s)) + '</dd></div>' +
+          '<div class="tot"><dt>' + L('المجموعة كاملة', 'The full set') + '</dt><dd>' + fmt(setNet(s)) + '</dd></div></dl>' : '');
       var mats = info.m ? '<ul class="ss-mat rv-up" style="--i:4">' + info.m.split(/\s*[·•]\s*/).map(function (m) { return '<li>' + (RTL ? m : m.charAt(0).toUpperCase() + m.slice(1)) + '</li>'; }).join('') + '</ul>' : '';
       fitPieces = pcs; fitSetName = name; fitUnits = null;
       pg.innerHTML = crumbs([[L('الرئيسية', 'Home'), '#top'], [L('المجموعات', 'Sets'), '#/s'], [C.n, '#/s/' + k], [name]]) +
@@ -6278,7 +6357,9 @@ var T = function (s) { return s; };
             '<div class="pd-top rv-up"><a class="eyebrow pd-setl" href="#/s/' + k + '">' + L('مجموعة · ', 'A set · ') + C.n + '</a>' +
               '<button type="button" class="pd-wish" id="ssWish" aria-pressed="' + allSaved() + '" aria-label="' + L('احفظ المجموعة في المفضلة', 'Save the set to wishlist') + '">' + ICON('heart') + '</button></div>' +
             '<h1 class="pd-name rv-up" style="--i:1">' + name + '</h1>' + revLine('set:' + s, 'set') +
-            '<div class="pd-price ss-price rv-up" style="--i:2">' + setPrice(s) + '<em>' + nPieces(pcs.length) + '</em></div>' +
+            '<div class="pd-price ss-price rv-up" style="--i:2">' + setPrice(s) + (many ? '<em class="ss-off">' + L('وفّر ', 'Save ') + fmt(setSave(s)) + '</em>' : '<em>' + nPieces(pcs.length) + '</em>') + '</div>' +
+            (many ? '<p class="ss-why rv-up" style="--i:2">' + L('بدل ' + fmt(setSum(s)) + ' لو اشتريت كل قطعة لوحدها: خصم ', 'Instead of ' + fmt(setSum(s)) + ' bought one by one: ') + OFF_PH +
+              L(' حين تأخذ ' + nPieces(pcs.length) + ' معًا.', ' off when you take all ' + pcs.length + ' pieces together.') + '</p>' : '') +
             '<p class="pd-lede rv-up" style="--i:3">' + setDesc(s) + '</p>' + mats +
             '<div class="ss-cta rv-up" style="--i:5"><button type="button" class="pill solid" data-ssall><span>' + L('أضف المجموعة كاملة إلى السلة', 'Add the whole set to cart') + '</span><i>' + ICON('plus') + '</i></button>' +
               '<a class="lnk" href="#ssBuild">' + L('أو اختر قطعها بنفسك', 'or choose its pieces yourself') + ' ' + LNK_IC + '</a></div>' +
@@ -6300,10 +6381,10 @@ var T = function (s) { return s; };
               '<span class="ssp-k">' + PRODUCTS[x].t + '</span><h3>' + (linked ? '<a href="#/p/' + x + '">' + PRODUCTS[x].n + '</a>' : PRODUCTS[x].n) + '</h3><span class="ssp-d">' + dm + '</span>' +
               '<div class="ssp-f"><b>' + fmt(PRODUCTS[x].p) + '</b><div class="pd-qty ssp-q"><button type="button" data-sq="-1" aria-label="' + L('قطعة أقل', 'One fewer') + '">' + ICON('minus') + '</button><span>1</span><button type="button" data-sq="1" aria-label="' + L('قطعة أكثر', 'One more') + '">' + ICON('plus') + '</button></div></div></article>';
           }).join('') + '</div>' +
-          '<div class="ss-sum rv-up"><span>' + L('اخترت', 'You chose') + ' <b id="ssN"></b></span><b class="ss-tot" id="ssTot"></b><button type="button" class="pill solid" id="ssAdd"><span>' + L('أضف المختار إلى السلة', 'Add your choice to cart') + '</span><i>' + ICON('plus') + '</i></button></div>' +
+          '<div class="ss-sum rv-up"><span>' + L('اخترت', 'You chose') + ' <b id="ssN"></b></span><span class="ss-tw"><b class="ss-tot" id="ssTot"></b><s id="ssWas"></s></span><span class="ss-note" id="ssNote" aria-live="polite"></span><button type="button" class="pill solid" id="ssAdd"><span>' + L('أضف المختار إلى السلة', 'Add your choice to cart') + '</span><i>' + ICON('plus') + '</i></button></div>' +
         '</div></section>' +
         (pcs.length > 1 ? fitCheck('*', pcs) : fitCheck(pcs[0], null)) + craftBand() + reviews('set:' + s, 'set', true, setRevPhoto(shown, name, shots)) + otherSets(s) +
-        '<div class="pd-bar" id="pdBar"><div class="wrap pd-bar-in"><div class="pd-bar-t"><b>' + name + '</b><span>' + setPrice(s, true) + '</span></div>' +
+        '<div class="pd-bar" id="pdBar"><div class="wrap pd-bar-in"><div class="pd-bar-t"><b>' + name + '</b><span>' + setPrice(s, true) + (many ? '<em class="ss-bar-off">' + L(' · وفّر ', ' · save ') + fmt(setSave(s)) + '</em>' : '') + '</span></div>' +
           '<button type="button" class="pill solid" data-ssall><span>' + L('أضف المجموعة', 'Add the set') + '</span><i>' + ICON('plus') + '</i></button></div></div>';
       var rts = $('#pdRevT'); if (rts) trackArrows(rts);
       bindSet(s, shots, pcs, allSaved);
@@ -6323,7 +6404,11 @@ var T = function (s) { return s; };
       function paint() {
         var n = 0, sum = 0;
         pcs.forEach(function (x) { n += q[x]; sum += q[x] * PRODUCTS[x].p; var a = $('.ssp[data-id="' + x + '"]', pg); if (a) { $('.ssp-q span', a).textContent = q[x]; a.classList.toggle('off', !q[x]); } });
-        $('#ssN').textContent = nPieces(n); $('#ssTot').textContent = fmt(sum); $('#ssAdd').disabled = !n;
+        // every piece at least once makes a whole set: its discount comes off, and the bar says so; short of it, it says what completing would save
+        var full = pcs.length > 1 ? Math.min.apply(null, pcs.map(function (x) { return q[x]; })) : 0, off = full * setSave(s);
+        $('#ssN').textContent = nPieces(n); $('#ssTot').textContent = fmt(sum - off); $('#ssWas').textContent = off ? fmt(sum) : ''; $('#ssAdd').disabled = !n;
+        $('#ssNote').innerHTML = pcs.length < 2 || !n ? '' : off ? L('وفّرت ', 'You save ') + '<b>' + fmt(off) + '</b>' + L(' بأخذ المجموعة كاملة', ' with the whole set')
+          : L('أكمل المجموعة ووفّر ', 'Complete the set to save ') + '<b>' + fmt(setSave(s)) + '</b>';
         if (fid === '*' && $('#fitSvg')) {
           var dd = $('#fitPc'); if (dd) { dd.firstElementChild.innerHTML = fitPcBtn('*'); var o = $('[data-fpc="*"]', dd); if (o) o.innerHTML = fitAllThumb() + fitAllT(); }
           $('#fitCap').innerHTML = fitCap('*'); var lf = $('#fitLead'); if (lf) lf.innerHTML = fitLead('*', true);
